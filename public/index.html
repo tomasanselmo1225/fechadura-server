@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ESP Datalogging Firebase App</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyB4RXd66gmaHZHtqZOC_MnAmExDm_WKzOQ",
+        authDomain: "fechadura-eletronica-isa.firebaseapp.com",
+        databaseURL: "https://fechadura-eletronica-isa-default-rtdb.firebaseio.com",
+        projectId: "fechadura-eletronica-isa",
+        storageBucket: "fechadura-eletronica-isa.appspot.com",
+        messagingSenderId: "592300858890",
+        appId: "1:592300858890:web:b87a583f46fa39b36649f3"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.database();
+    </script>
+
+    <!-- Include EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- Include other libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <img src="ISA.png" alt="Instituto Superior de Agronomia" />
+    <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+    <!--TOP BAR-->
+    <div class="topnav">
+        <h1>Fechadura Painel Admin <i class="fas fa-clipboard-list"></i></h1>
+    </div>
+
+    <!--AUTHENTICATION BAR (USER DETAILS/LOGOUT BUTTON)-->
+    <div id="authentication-bar" style="display: none;">
+        <p><span id="authentication-status">User logged in</span>
+            <span id="user-details">USEREMAIL</span>
+            <a href="#" id="logout-link">(logout)</a>
+        </p>
+    </div>
+
+    <!--LOGIN FORM-->
+    <form id="login-form" style="display: none;">
+        <div class="form-elements-container">
+            <label for="input-email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Username" id="input-email" required>
+
+            <label for="input-password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="input-password" required>
+
+            <button type="submit" id="login-button">Login</button>
+            <p id="error-message" style="color:red;"></p>
+        </div>
+    </form>
+
+    <!--CONTENT (SENSOR READINGS)-->
+    <div class="content-sign-in" id="content-sign-in" style="display: none;">
+        <!--BUTTONS TO HANDLE DATA-->
+        <p>
+            <button id="hide-data-button" style="display:none;">Hide data</button>
+        </p>
+    </div>
+
+    <!--INCLUDE JS FILES-->
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/index.js"></script>
+
+    <script>
+        firebase.auth().onAuthStateChanged(user => {
+            const loginForm = document.getElementById('login-form');
+            const authBar = document.getElementById('authentication-bar');
+            const contentSignIn = document.getElementById('content-sign-in');
+            const userDetails = document.getElementById('user-details');
+            
+            if (user) {
+                authBar.style.display = 'block';
+                loginForm.style.display = 'none';
+                contentSignIn.style.display = 'block';
+                userDetails.textContent = user.email;
+    
+                // Configura os elementos do painel de geração de códigos
+                setupUIElements();
+            } else {
+                authBar.style.display = 'none';
+                loginForm.style.display = 'block';
+                contentSignIn.style.display = 'none';
+            }
+        });
+    
+        document.getElementById('logout-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            clearUIElements(); // Remove os elementos do painel de geração de códigos
+            firebase.auth().signOut().catch(error => console.error("Erro ao deslogar:", error));
+        });
+    </script>
+
+<script>
+    document.getElementById('logout-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        clearUIElements(); // Limpa ou oculta os elementos do painel de geração de códigos
+        firebase.auth().signOut().catch(error => console.error("Erro ao deslogar:", error));
+    });
+</script>
+
+</body>
+</html>

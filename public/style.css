@@ -1,0 +1,207 @@
+/* Fonte e alinhamento global */
+html {
+    font-family: 'calibri', Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+/* Reset básico e melhoria de layout */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #f4f4f4; /* Fundo mais suave */
+}
+
+/* Barra de navegação */
+.topnav {
+    background-color: #0fb300;
+    color: white;
+    font-size: 1rem;
+    padding: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Barra de autenticação */
+#authentication-bar {
+    background-color: mintcream;
+    padding: 10px;
+    border-bottom: 2px solid #0fb300;
+}
+
+/* Detalhes do utilizador */
+#user-details {
+    color: #1282A2;
+    font-weight: bold;
+}
+
+/* Layout geral */
+.content {
+    padding: 20px;
+}
+
+/* Estilização de cartões */
+.card {
+    background-color: white;
+    box-shadow: 2px 2px 12px rgba(140, 140, 140, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Grid responsivo */
+.cards {
+    max-width: 800px;
+    margin: 20px auto;
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Estilos para leitura */
+.reading {
+    color: #193036;
+    font-weight: bold;
+}
+
+.date-time {
+    font-size: 0.9rem;
+    color: #1282A2;
+    font-style: italic;
+}
+
+/* Estilos para botões */
+button {
+    background-color: #0d9700;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #0a7a00;
+    transform: scale(1.05);
+}
+
+/* Botão de eliminar */
+.deletebtn {
+    background-color: #c52c2c;
+}
+
+.deletebtn:hover {
+    background-color: #a82828;
+}
+
+/* Formulário de login */
+.form-elements-container {
+    padding: 16px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Campos de input */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding-top: 50px;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #666;
+}
+
+.close:hover, .close:focus {
+    color: #c52c2c;
+    cursor: pointer;
+}
+
+/* Painel centralizado */
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+/* Painel de expiração */
+.expiration-panel {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botões estilizados */
+.button-styled {
+    background-color: #0d9700;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button-styled:hover {
+    background-color: #0a7a00;
+    transform: scale(1.05);
+}
+
+/* Responsividade */
+@media screen and (max-width: 600px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
