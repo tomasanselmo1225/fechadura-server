@@ -51,6 +51,14 @@ function generateCode() {
     return code;
 }
 
+// Função para gerar um UID simples
+function generateUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 // Função para converter data de DD/MM/YYYY para YYYY-MM-DD
 function convertDateFormat(dateStr) {
     const [day, month, year] = dateStr.split('/');
@@ -97,18 +105,21 @@ async function processEmails(retries = 5) {
                     const nameMatch = body.match(/Nome\s+"?([^"\n]+)"?/i);
                     const dateMatch = body.match(/Data\s+"?([^"\n]+)"?/i);
                     const timeMatch = body.match(/Hora\s+"?([^"\n]+)"?/i);
+                    const emailMatch = body.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i);
 
                     if (nameMatch && dateMatch && timeMatch) {
                         const name = nameMatch[1].trim();
                         const date = dateMatch[1].trim();
                         const time = timeMatch[1].trim();
+                        const emailAddress = emailMatch ? emailMatch[0] : null;
                         const [startTime, endTime] = time.split(' - ').map(t => t.trim());
 
-                        console.log(`Dados extraídos - Nome: ${name}, Data: ${date}, Hora: ${time}`);
+                        console.log(`Dados extraídos - Nome: ${name}, Data: ${date}, Hora: ${time}, Email: ${emailAddress || 'Nenhum'}`);
 
                         const formattedDate = convertDateFormat(date);
-                        const startDateTime = new Date(`${formattedDate}T${startTime}:00`);
-                        const endDateTime = new Date(`${formattedDate}T${endTime}:00`);
+                        // Criar datas assumindo que o horário do e-mail é em tempo local de Lisboa (WET/WEST)
+                        const startDateTime = new Date(`${formattedDate}T${startTime}`);
+                        const endDateTime = new Date(`${formattedDate}T${endTime}`);
 
                         if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
                             console.log('Erro: Data ou hora inválida após conversão.');
@@ -116,17 +127,18 @@ async function processEmails(retries = 5) {
                         }
 
                         const code = generateCode();
+                        const uid = generateUID();
 
-                        const ref = db.ref('Emails');
+                        const ref = db.ref('GlobalCodes');
                         await ref.push({
                             code,
                             name,
+                            email: emailAddress,
                             startDateTime: startDateTime.toISOString(),
                             endDateTime: endDateTime.toISOString(),
-                            emailSubject: subject,
-                            processedAt: new Date().toISOString()
+                            uid
                         });
-                        console.log(`Código ${code} criado para ${name} (${startDateTime} - ${endDateTime}) e salvo em 'Emails'`);
+                        console.log(`Código ${code} criado para ${name} (${startDateTime} - ${endDateTime}) e salvo em 'GlobalCodes'`);
 
                         await connection.addFlags(item.attributes.uid, ['\\Seen']);
                         console.log('E-mail marcado como lido.');
@@ -135,6 +147,7 @@ async function processEmails(retries = 5) {
                         console.log('Nome encontrado:', nameMatch ? nameMatch[1] : 'Nenhum');
                         console.log('Data encontrada:', dateMatch ? dateMatch[1] : 'Nenhum');
                         console.log('Hora encontrada:', timeMatch ? timeMatch[1] : 'Nenhum');
+                        console.log('Email encontrado:', emailMatch ? emailMatch[0] : 'Nenhum');
                     }
                 } else {
                     console.log('E-mail não contém "Nova reserva" e "Playtomic".');
